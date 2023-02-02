@@ -1,0 +1,44 @@
+package Client;
+
+import Code.AES;
+import javafx.scene.control.TextArea;
+
+import java.net.DatagramSocket;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import static Client.Chat.dealpacketfile;
+import static GUI.Login.filebyte;
+
+/**
+ * 接收数据的线程
+ */
+public class receivefile extends Thread {
+    DatagramSocket Client;//绑定的ip和端口
+//    String title;
+
+    TextArea area;
+    ConcurrentHashMap<String, String> thefilepath;
+
+    public receivefile(DatagramSocket client,TextArea area, ConcurrentHashMap<String, String> thefilepath) {
+        Client = client;
+        this.area = area;
+        this.thefilepath = thefilepath;
+    }
+
+    @Override
+    public synchronized void run() {
+        while (true)
+        {
+            for (byte[] result : filebyte) {
+                try {
+                    dealpacketfile(result, Client, area,thefilepath);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                filebyte.remove(result);
+            }
+        }
+    }
+}

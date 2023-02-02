@@ -1,0 +1,19 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="P2PDemo:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/P2PDemo_jar</output-path>
+    <root id="archive" name="P2PDemo.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="Pchat" />
+      <element id="extracted-dir" path="D:/Maven/LocalRepository/commons-codec/commons-codec/1.15/commons-codec-1.15.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="D:/Maven/LocalRepository/commons-io/commons-io/2.11.0/commons-io-2.11.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="D:/Maven/LocalRepository/org/bouncycastle/bcprov-jdk15on/1.70/bcprov-jdk15on-1.70.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="D:/Maven/LocalRepository/com/alibaba/fastjson/2.0.22/fastjson-2.0.22.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="D:/Maven/LocalRepository/com/alibaba/fastjson2/fastjson2-extension/2.0.22/fastjson2-extension-2.0.22.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="D:/Maven/LocalRepository/org/apache/directory/studio/org.apache.commons.codec/1.8/org.apache.commons.codec-1.8.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="D:/Maven/LocalRepository/org/apache/commons/commons-lang3/3.12.0/commons-lang3-3.12.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="D:/Maven/LocalRepository/com/alibaba/fastjson2/fastjson2/2.0.22/fastjson2-2.0.22.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

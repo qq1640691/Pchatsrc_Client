@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="p2p">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/p2p.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
