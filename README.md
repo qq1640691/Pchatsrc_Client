@@ -10,3 +10,5 @@
 ![image](登录.png)
 
 ![image](主界面.png)
+
+![image](私聊.png)
