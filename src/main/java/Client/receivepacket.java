@@ -33,22 +33,21 @@ public class receivepacket extends Thread{
 
     public static void getfrema(byte[] get,String time,String length,String part)
     {
-        if(!longtime.contains(time))
-        {
-            longtime.add(time);
-        }
-        if (!videostrem.containsKey(time))
-        {
-            videostrem.put(time,new byte[Integer.parseInt(length)]);
-            byte[] temp = videostrem.get(time);
-            System.arraycopy(get,50,temp,Integer.parseInt(part)*950,get.length-50);
-            videostrem.put(time,temp);
-        }
-        if(videostrem.containsKey(time))
-        {
-            byte[] temp = videostrem.get(time);
-            System.arraycopy(get,50,temp,Integer.parseInt(part)*950,get.length-50);
-            videostrem.put(time,temp);
+        if (get!=null) {
+            if (!longtime.contains(time)) {
+                longtime.add(time);
+            }
+            if (!videostrem.containsKey(time)) {
+                videostrem.put(time, new byte[Integer.parseInt(length)]);
+                byte[] temp = videostrem.get(time);
+                System.arraycopy(get, 50, temp, Integer.parseInt(part) * 950, get.length - 50);
+                videostrem.put(time, temp);
+            }
+            if (videostrem.containsKey(time)) {
+                byte[] temp = videostrem.get(time);
+                System.arraycopy(get, 50, temp, Integer.parseInt(part) * 950, get.length - 50);
+                videostrem.put(time, temp);
+            }
         }
     }
 

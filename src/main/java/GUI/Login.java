@@ -125,9 +125,13 @@ public class Login{
         Label address = new Label("服务器IP");
         Label port = new Label("服务器端口");
         TextField namefile = new TextField();
+        namefile.setText("方正"+ new Random().nextInt(100));
         PasswordField keyfile = new PasswordField();
+        keyfile.setText("0000000000000000");
         TextField addressfile = new TextField();
+        addressfile.setText("47.113.189.105");
         TextField portfile = new TextField();
+        portfile.setText("41000");
         title.setTextAlignment(TextAlignment.CENTER);
         gridPane.add(username, 0, 1);
         gridPane.add(namefile, 1, 1);
@@ -333,7 +337,6 @@ public class Login{
     public static CopyOnWriteArrayList<String> longtime = new CopyOnWriteArrayList<>();
 
     public static ConcurrentHashMap<String,byte[]> videostremv = new ConcurrentHashMap<>();
-    public static CopyOnWriteArrayList<String> longtimev = new CopyOnWriteArrayList<>();
     public static CopyOnWriteArrayList<byte[]> packetbytes = new CopyOnWriteArrayList<>();
 
     public static CopyOnWriteArrayList<String> showedtime = new CopyOnWriteArrayList<>();
@@ -370,7 +373,7 @@ public class Login{
                             }
                             packetbytes.remove(getbytes);
                         } catch (Exception e) {
-                            throw new RuntimeException(e);
+                            System.out.println("error");
                         }
                     }
                 }
@@ -561,6 +564,8 @@ public class Login{
         all.setMinWidth(880);
     }
 
+    public static int Close=1;
+
 
     public static void chatone(DatagramSocket Client, String title, byte[] result) {
         CopyOnWriteArrayList<String> mess = new CopyOnWriteArrayList<>();
@@ -653,6 +658,7 @@ public class Login{
         Text f3 = new Text("  发送语音  ");
         Text f4 = new Text("  视频聊天  ");
         f4.addEventHandler(MouseEvent.MOUSE_CLICKED,e->{
+            Close=1;
             String[] inf = title.split("//");
             Thread vchat = new Vchat(inf[0].replace("/",""),Integer.parseInt(inf[1]),Client);
             vchat.start();

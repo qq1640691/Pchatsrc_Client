@@ -14,8 +14,8 @@ import java.net.SocketAddress;
 import java.nio.charset.StandardCharsets;
 
 import static Client.Vchat.sendhead;
+import static GUI.Login.Close;
 import static GUI.Login.KEY;
-import static GUI.Login.longtime;
 
 public class Rchat extends Thread{
 
@@ -70,7 +70,12 @@ public class Rchat extends Thread{
                 throw new RuntimeException(e);
             }
             sendbyte(fileConvertToByteArray(file), time, Client, address);
-
+            if(Close==0)
+            {
+                System.gc();
+                targetDataLine.close();
+                return;
+            }
         }
     }
 

@@ -8,7 +8,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.Java2DFrameConverter;
 import org.bytedeco.javacv.OpenCVFrameGrabber;
@@ -27,6 +26,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.charset.StandardCharsets;
 
+import static GUI.Login.Close;
 import static GUI.Login.KEY;
 
 public class Vchat extends Thread{
@@ -90,8 +90,9 @@ public class Vchat extends Thread{
             Thread rchat = new Rchat(ip,port,Client);
             rchat.start();
             stage.setOnCloseRequest(event -> {
+//                System.out.println("Close==0");
+                Close=0;
                 getimage.stop();
-                rchat.stop();
                 try {
                     grabber.close();
                 } catch (FrameGrabber.Exception e) {
