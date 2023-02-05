@@ -10,19 +10,10 @@ import javax.crypto.spec.SecretKeySpec;
  * @create 2022年2月22日 下午1:52:52
  **/
 public class AES {
-
-    /**
-     * 密钥
-     */
-//    private static final String KEY = "abcdefghhgfedcba";// AES加密要求key必须要256个比特位（这里需要长度为16，否则会报错）
-
     /**
      * 算法
      */
     private static final String ALGORITHMSTR = "AES/ECB/PKCS5Padding";
-
-
-
     /**
      * AES加密
      * @param content 待加密的内容
@@ -36,7 +27,6 @@ public class AES {
         cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(encryptKey.getBytes(), "AES"));
         return cipher.doFinal(content);
     }
-
 
     /**
      * AES加密为base 64 code

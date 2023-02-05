@@ -1,6 +1,7 @@
 package GUI;
 
 import Client.*;
+import Code.AES;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,11 +35,14 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static Client.Chat.myinf;
 import static Client.playwav.play;
+import static Client.receivepacket.getfrema;
+//import static Client.receivepacket.getvoice;
 import static Regular.reguler.*;
 import static javasound.getvoice.record;
 import static thesendinf.sendinf.fileConvertToByteArray;
@@ -52,6 +56,7 @@ public class Login{
     public static int PORT;
     public static String ID;
     public static int BYTELENGTH = 744;
+//    public static int openorno = 0;
     public static CopyOnWriteArrayList<String> userlist = new CopyOnWriteArrayList<>();//这个表里存储的是用户列表
     public static CopyOnWriteArrayList<String> userdelay = new CopyOnWriteArrayList<>();//这个表里存储的是客户端之间的延迟
     public static ConcurrentHashMap<String, String> fileinf = new ConcurrentHashMap<>();//这个表里存储的是文件名对应文件信息,创建时间,大小
@@ -324,8 +329,52 @@ public class Login{
     public static ListView<Object> getlist = new ListView<>(getdata);
     public static TextArea infarea = new TextArea();
     public static ConcurrentHashMap<String, String> thefilepath = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<String,byte[]> videostrem = new ConcurrentHashMap<>();
+    public static CopyOnWriteArrayList<String> longtime = new CopyOnWriteArrayList<>();
+
+    public static ConcurrentHashMap<String,byte[]> videostremv = new ConcurrentHashMap<>();
+    public static CopyOnWriteArrayList<String> longtimev = new CopyOnWriteArrayList<>();
+    public static CopyOnWriteArrayList<byte[]> packetbytes = new CopyOnWriteArrayList<>();
+
+    public static CopyOnWriteArrayList<String> showedtime = new CopyOnWriteArrayList<>();
+
 
     public static void chat(DatagramSocket Client, String ip, String port, String userid, String key) {
+        new Thread(()->{
+                while(true) {
+                    for (byte[] getbytes : packetbytes) {
+                        try {
+                            byte[] bytes = AES.decrypt(getbytes, KEY);
+                            String head = new String(bytes, 0, 2);
+                            switch (head) {
+                                case "01":
+                                    String[] inf = new String(bytes, 0, 50).split("//");
+                                    if(!showedtime.contains(inf[2]))
+                                    {
+                                        getfrema(bytes, inf[2], inf[3], inf[1]);
+                                    }
+                                    break;
+                                case "00":
+                                    String[] infv = new String(bytes, 0, 50).split("//");
+                                    byte[] temp = new byte[bytes.length-50];
+                                    System.arraycopy(bytes,50,temp,0,bytes.length-50);
+                                    videostremv.put(infv[1],temp);
+                                    break;
+                                case "fi":
+                                    filebyte.add(bytes);
+                                    break;
+                                case "de":
+                                    delaybyte.add(bytes);
+                                default:
+                                    allbyte.add(bytes);
+                            }
+                            packetbytes.remove(getbytes);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+            }).start();
         Path message = Paths.get("allmessage");
         try {
             Files.createDirectories(message);
@@ -602,6 +651,16 @@ public class Login{
         Text functiondes = new Text(" 发送文件  ");
         Text f2 = new Text("  发送图片  ");
         Text f3 = new Text("  发送语音  ");
+        Text f4 = new Text("  视频聊天  ");
+        f4.addEventHandler(MouseEvent.MOUSE_CLICKED,e->{
+            String[] inf = title.split("//");
+            Thread vchat = new Vchat(inf[0].replace("/",""),Integer.parseInt(inf[1]),Client);
+            vchat.start();
+            Thread showthevideo = new showvideo();
+            showthevideo.start();
+            Thread showvc = new showvc();
+            showvc.start();
+        });
         functiondes.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("选择文件");
@@ -659,6 +718,7 @@ public class Login{
         textk.getChildren().add(functiondes);
         textk.getChildren().add(f2);
         textk.getChildren().add(f3);
+        textk.getChildren().add(f4);
         textk.setAlignment(Pos.CENTER);
         textk.setMinWidth(55);
         textk.setMinHeight(25);
@@ -699,8 +759,8 @@ public class Login{
                         {
                             try {
                                 infarea.appendText("播放录音");
-                                File file = new File(String.valueOf(new_val));
-                                new Thread(()->play(file)).start();
+//                                File file = new File(String.valueOf(new_val));
+                                new Thread(()->play(String.valueOf(new_val))).start();
                             }catch (Exception e)
                             {
                                 infarea.appendText("不是录音,不允许点击");

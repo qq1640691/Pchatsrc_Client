@@ -19,25 +19,24 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class playwav {
 
-    public static void play(File file) {
+    public static void play(String file) {
         try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(file));
             AudioFormat audioFormat = audioInputStream.getFormat();
             Info dataLineInfo = new Info(SourceDataLine.class, audioFormat);
-
             SourceDataLine sourceDataLine = (SourceDataLine) AudioSystem.getLine(dataLineInfo);
             byte[] b = new byte[1024];
             int len;
             sourceDataLine.open(audioFormat, 1024);
             sourceDataLine.start();
-            while ((len = audioInputStream.read(b)) > 0) {
+            while ((len = audioInputStream.read(b)) != -1) {
                 sourceDataLine.write(b, 0, len);
             }
             audioInputStream.close();
             sourceDataLine.drain();
             sourceDataLine.close();
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
+            System.out.println("error");
         }
     }
 }

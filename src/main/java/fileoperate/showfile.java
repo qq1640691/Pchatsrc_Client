@@ -75,4 +75,18 @@ public class showfile {
             }
         }
     }
+
+    public static void delecttemp()
+    {
+        File f = new File("temp\\");//获取路径
+	        if (!f.exists()) {
+	            return;
+	        }
+            File[] fa = f.listFiles();//用数组接收
+         for (File fs : fa) {//循环遍历
+                if (!fs.isDirectory()) {
+                    fs.delete();
+                }
+            }
+    }
 }
