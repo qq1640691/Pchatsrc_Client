@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="Maven: org.bytedeco:javacpp:1.4.4">
+  <library name="Maven: org.bytedeco:javacpp:1.4.4"
     <CLASSES>
       <root url="jar://D:/Maven/LocalRepository/org/bytedeco/javacpp/1.4.4/javacpp-1.4.4.jar!/" />
     </CLASSES>
