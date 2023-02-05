@@ -658,8 +658,6 @@ public class Login{
             vchat.start();
             Thread showthevideo = new showvideo();
             showthevideo.start();
-            Thread showvc = new showvc();
-            showvc.start();
         });
         functiondes.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             FileChooser fileChooser = new FileChooser();
