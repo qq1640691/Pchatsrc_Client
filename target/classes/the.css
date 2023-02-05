@@ -1,0 +1,83 @@
+.text-area {
+    -fx-font-size: 14;
+    -fx-background-insets: 0;
+    -fx-background-color: transparent, white, transparent, white;
+}
+
+.text-area .content {
+    -fx-background-color: transparent, white, transparent, white;
+}
+
+.text-area:focused .content {
+    -fx-background-color: transparent, white, transparent, white;
+}
+
+.text-area:focused {
+    -fx-highlight-fill: #7ecfff;
+}
+
+.text-area .content {
+    -fx-padding: 10px;
+    -fx-text-fill: gray;
+    -fx-highlight-fill: #7ecfff;
+}
+
+.button{
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+    /*-fx-font-family:"Segoe UI", Helvetica, Arial, sans-serif;*/
+    -fx-font-size: 1em; /* 12 */
+    -fx-text-fill: #000000;
+}
+
+.button:focused {
+    /*-fx-border-color: transparent, black;*/
+    /*-fx-border-width: 1, 1;*/
+    /*-fx-border-style: solid, segments(1, 2);*/
+    /*-fx-border-radius: 0, 0;*/
+    /*-fx-border-insets: 1 1 1 1, 0;*/
+}
+
+.button:pressed {
+    /*-fx-background-color: black;*/
+    /*-fx-text-fill: white;*/
+}
+
+.list-view
+{
+    -fx-font-size: 14;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+    -fx-vbar-policy : never;
+}
+
+.text-area .scroll-bar {
+    /*-fx-padding: 0;*/
+    -fx-vbar-policy : never;
+    -fx-scale-x: 0;
+    -fx-scale-y: 0;
+    /*-fx-vbar-policy : never;*/
+    -fx-hbar-policy: never;
+    -fx-padding:0
+}
+
+.list-view .scroll-bar {
+    /*-fx-padding: 0;*/
+    -fx-scale-x: 0;
+    -fx-scale-y: 0;
+    -fx-vbar-policy : never;
+    -fx-hbar-policy: never;
+    -fx-padding: -7
+}
+
+/*.list-view .scroll-bar:vertical{*/
+/*    -fx-padding: -7*/
+/*}*/
+
+
+
+
