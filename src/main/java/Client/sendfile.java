@@ -1,7 +1,5 @@
 package Client;
 
-import com.sun.javafx.scene.control.skin.IntegerFieldSkin;
-
 import java.io.File;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
@@ -10,8 +8,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static Client.Chat.myinf;
-import static GUI.Login.infarea;
-import static GUI.Login.userdelay;
+import static GUI.Stage.infarea;
 import static fileoperate.fileinf.filetheinf;
 import static natserver.ping.sendthedelay;
 import static thesendinf.sendinf.*;
@@ -39,13 +36,6 @@ public class sendfile extends Thread {
         String[] infs = title.split("//");
         SocketAddress address = new InetSocketAddress(infs[0].replace("/",""), Integer.parseInt(infs[1]));
         try {
-            int delay;
-            try {
-                delay = Integer.parseInt(sendthedelay(infs[0].replace("/","")));
-            } catch (Exception e) {
-                delay=15;
-            }
-//            System.out.println(delay);
             if(flag.contains("fzvoice"))
             {
                 Thread.sleep(10);
@@ -55,6 +45,12 @@ public class sendfile extends Thread {
                 Thread.sleep(10);
                 sendstrone(address, Client, "正在向您发送图片:", myinf());
             }
+            int delay;
+            try {
+                delay = Integer.parseInt(sendthedelay(infs[0].replace("/","")));
+            } catch (Exception e) {
+                delay=15;
+            }
             if(!flag.contains("fzimage")&&!flag.contains("fzvoice"))
             {
                 Thread.sleep(10);
@@ -63,7 +59,6 @@ public class sendfile extends Thread {
             }
             sendbigfiles(address, Client, file, myinf(), thefilepath,delay,flag);
             Thread.sleep(delay);
-//            System.out.println("发送完成大文件");
             sendFF(address, Client, filetheinf(String.valueOf(file),flag), Objects.requireNonNull(myinf()),delay);
         } catch (Exception e) {
             throw new RuntimeException(e);

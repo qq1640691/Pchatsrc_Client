@@ -2,6 +2,7 @@ package GUI;
 
 import Client.*;
 import Code.AES;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,7 +19,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 import javax.sound.sampled.LineUnavailableException;
 import java.io.File;
@@ -45,11 +45,12 @@ import static Client.receivepacket.getfrema;
 //import static Client.receivepacket.getvoice;
 import static Regular.reguler.*;
 import static javasound.getvoice.record;
+import static natserver.ping.sendthedelay;
 import static thesendinf.sendinf.fileConvertToByteArray;
 import static thesendinf.sendinf.sendmget;
 
 
-public class Login{
+public class Stage {
 
     public static String KEY;
     public static String IP;
@@ -70,7 +71,7 @@ public class Login{
     public static ConcurrentHashMap<String,byte[]> filetemp = new ConcurrentHashMap<>();
     public static String RSApublickey;
 
-    public static Stage all = new Stage();
+    public static javafx.stage.Stage all = new javafx.stage.Stage();
     public static double WIDTH = 850;
     public static double HEIGH = 430;
 
@@ -81,33 +82,14 @@ public class Login{
         }
         catch (Exception e)
         {
-            Stage alert = new Stage();
+            javafx.stage.Stage alert = new javafx.stage.Stage();
             Text err = new Text();
             err.setText("无RSA密钥,请检查");
-            err.setTextAlignment(TextAlignment.CENTER);
-            err.setFill(Color.RED);
-            err.setFont(Font.font(null, FontWeight.BOLD, 18));
-            HBox theerr = new HBox();
-            theerr.setAlignment(Pos.CENTER);
-            theerr.getChildren().add(err);
-            theerr.setPadding(new Insets(-30, 0, 0, 0));
-            Scene scene = new Scene(theerr, 300, 160);
-            alert.setScene(scene);
-            alert.setResizable(false);
-            File ico = new File("ico\\alert.png");
-            try {
-                alert.getIcons().add(new Image(new FileInputStream(ico)));
-            } catch (FileNotFoundException event) {
-                throw new RuntimeException(event);
-            }
-            alert.show();
-            alert.setOnCloseRequest(event->{
-                System.exit(0);
-            });
+            showalert(alert, err);
         }
         RSApublickey = new String(rsakey,0,rsakey.length);
 //        System.out.println(RSApublickey);
-        Stage stage = new Stage();
+        javafx.stage.Stage stage = new javafx.stage.Stage();
         GridPane gridPane = new GridPane();
         HBox welcome = new HBox();
         HBox lg = new HBox();
@@ -125,13 +107,9 @@ public class Login{
         Label address = new Label("服务器IP");
         Label port = new Label("服务器端口");
         TextField namefile = new TextField();
-        namefile.setText("方正"+ new Random().nextInt(100));
         PasswordField keyfile = new PasswordField();
-        keyfile.setText("0000000000000000");
         TextField addressfile = new TextField();
-        addressfile.setText("47.113.189.105");
         TextField portfile = new TextField();
-        portfile.setText("41000");
         title.setTextAlignment(TextAlignment.CENTER);
         gridPane.add(username, 0, 1);
         gridPane.add(namefile, 1, 1);
@@ -194,7 +172,7 @@ public class Login{
             hBoxxy.setAlignment(Pos.CENTER);
             hBoxxy.getChildren().add(xycontent);
             Scene scenexy = new Scene(hBoxxy, 1500, 800);
-            Stage stagexy = new Stage();
+            javafx.stage.Stage stagexy = new javafx.stage.Stage();
             stagexy.setScene(scenexy);
             stagexy.alwaysOnTopProperty();
             stagexy.setResizable(false);
@@ -216,7 +194,7 @@ public class Login{
         {
             if (Objects.equals(e.getButton().toString(), "PRIMARY")) {
                 if (!yhxy.isSelected()) {
-                    Stage aleat = new Stage();
+                    javafx.stage.Stage aleat = new javafx.stage.Stage();
                     Text err = new Text();
                     err.setText("请先同意用户协议!");
                     err.setTextAlignment(TextAlignment.CENTER);
@@ -233,7 +211,7 @@ public class Login{
                         stage.close();
                     } else {
                         if (!isSpecialChar(getname)) {
-                            Stage aleat = new Stage();
+                            javafx.stage.Stage aleat = new javafx.stage.Stage();
                             Text err = new Text();
                             err.setText("用户名违法,不得包含特殊字符");
                             err.setTextAlignment(TextAlignment.CENTER);
@@ -242,7 +220,7 @@ public class Login{
                             Popbox(aleat, err);
                         }
                         if (!isport(getport)) {
-                            Stage aleat = new Stage();
+                            javafx.stage.Stage aleat = new javafx.stage.Stage();
                             Text err = new Text();
                             err.setText("端口号违法,请检查是否在1-65536之间");
                             err.setTextAlignment(TextAlignment.CENTER);
@@ -251,7 +229,7 @@ public class Login{
                             Popbox(aleat, err);
                         }
                         if (!isIPAdress(getaddress)) {
-                            Stage aleat = new Stage();
+                            javafx.stage.Stage aleat = new javafx.stage.Stage();
                             Text err = new Text();
                             err.setText("IP地址违法,请检查");
                             err.setTextAlignment(TextAlignment.CENTER);
@@ -261,7 +239,7 @@ public class Login{
                         }
                         if(isfigure(getname))
                         {
-                            Stage aleat = new Stage();
+                            javafx.stage.Stage aleat = new javafx.stage.Stage();
                             Text err = new Text();
                             err.setText("用户名不能是纯数字");
                             err.setTextAlignment(TextAlignment.CENTER);
@@ -271,7 +249,7 @@ public class Login{
                         }
                         if(getname.getBytes(StandardCharsets.UTF_8).length > 30 )
                         {
-                            Stage aleat = new Stage();
+                            javafx.stage.Stage aleat = new javafx.stage.Stage();
                             Text err = new Text();
                             err.setText("用户名长度超出,请重新输入");
                             err.setTextAlignment(TextAlignment.CENTER);
@@ -279,7 +257,6 @@ public class Login{
                             err.setFont(Font.font(null, FontWeight.BOLD, 18));
                             Popbox(aleat, err);
                         }
-
                     }
                 }
             }
@@ -300,30 +277,44 @@ public class Login{
             throw new RuntimeException(e);
         }
         stage.show();
-        stage.setOnCloseRequest(event -> {
-            System.exit(0);
-        });
+        stage.setOnCloseRequest(event -> System.exit(0));
     }
 
-    public static void Popbox(Stage aleat, Text err) {
-        POP(aleat, err);
+    public static void showalert(javafx.stage.Stage alert, Text err) {
+        newalert(alert, err);
+        alert.setOnCloseRequest(event-> System.exit(0));
     }
 
-    public static void POP(Stage aleat, Text err) {
+    public static void newalert(javafx.stage.Stage alert, Text err) {
+        err.setTextAlignment(TextAlignment.CENTER);
+        err.setFill(Color.RED);
+        err.setFont(Font.font(null, FontWeight.BOLD, 18));
+        newbox(alert, err);
+    }
+
+    public static void newbox(javafx.stage.Stage alert, Text err) {
         HBox theerr = new HBox();
         theerr.setAlignment(Pos.CENTER);
         theerr.getChildren().add(err);
         theerr.setPadding(new Insets(-30, 0, 0, 0));
         Scene scene = new Scene(theerr, 300, 160);
-        aleat.setScene(scene);
-        aleat.setResizable(false);
+        alert.setScene(scene);
+        alert.setResizable(false);
         File ico = new File("ico\\alert.png");
         try {
-            aleat.getIcons().add(new Image(new FileInputStream(ico)));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            alert.getIcons().add(new Image(new FileInputStream(ico)));
+        } catch (FileNotFoundException event) {
+            throw new RuntimeException(event);
         }
-        aleat.show();
+        alert.show();
+    }
+
+    public static void Popbox(javafx.stage.Stage aleat, Text err) {
+        POP(aleat, err);
+    }
+
+    public static void POP(javafx.stage.Stage aleat, Text err) {
+        newbox(aleat, err);
     }
 
     public static ObservableList<String> data = FXCollections.observableArrayList();
@@ -343,6 +334,47 @@ public class Login{
 
 
     public static void chat(DatagramSocket Client, String ip, String port, String userid, String key) {
+        Path files = Paths.get("file");
+        Path image = Paths.get("image");
+        Path voice = Paths.get("voice");
+        Path message = Paths.get("message");
+        Path allmessage = Paths.get("allmessage");
+        Path tempdri = Paths.get("temp");
+        Path done = Paths.get("done");
+        try {
+            Files.createDirectories(files);
+            Files.createDirectories(image);
+            Files.createDirectories(voice);
+            Files.createDirectories(message);
+            Files.createDirectories(allmessage);
+            Files.createDirectories(tempdri);
+            Files.createDirectories(done);
+        } catch (IOException e) {
+            System.out.println("error");
+        }
+        new Thread(()-> {
+            try {
+                Thread.sleep(8000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            String str;
+            try {
+                str = sendthedelay(Objects.requireNonNull(myinf()).split("//")[0].replace("/",""));
+//                System.out.println(str);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            if (str.equals("无网络")) {
+                Platform.runLater(()->
+                {
+                    javafx.stage.Stage alert = new javafx.stage.Stage();
+                    Text err = new Text();
+                    err.setText("对称形NAT,无法通信");
+                    showalert(alert, err);
+                });
+            }
+        }).start();
         new Thread(()->{
                 while(true) {
                     for (byte[] getbytes : packetbytes) {
@@ -378,44 +410,28 @@ public class Login{
                     }
                 }
             }).start();
-        Path message = Paths.get("allmessage");
-        try {
-            Files.createDirectories(message);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
         IP = ip;
         KEY = key;
         PORT = Integer.parseInt(port);
         ID = userid;
-        /**
-         * 向服务器发送在线的线程,直接在开头就会运行
+        /*
+          向服务器发送在线的线程,直接在开头就会运行
          */
-        Thread useronline = new useronline(userzx,userlist);
-        useronline.start();
-        Thread chaeckdelay = new checkdelay();
-        chaeckdelay.start();
-        Thread senddely = new senddelay(Client);
-        senddely.start();
         Thread UDPonline = new UDPonline();
         UDPonline.start();
-        Thread sendonline = new sendonline(IP, PORT, ID, Client);
-        sendonline.start();
         Thread receive = new recieveall(Client, userlist,listView,data,getdata);
         receive.start();
-        Thread printfileget = new printfileget(infarea);
-        printfileget.start();
-        Thread checkfile = new checkfile(Client);
-        checkfile.start();
-        /**
-         * 这个地方从列表点击获取,要从主函数里删掉
+        polling polling = new polling(Client,infarea,IP,PORT,ID);
+        polling.poll();
+        /*
+          这个地方从列表点击获取,要从主函数里删掉
          */
         HBox Hmessage = new HBox();//左上角的聊天框
         HBox intitle = new HBox();
         intitle.setMinHeight(30);
         Text listtitle = new Text();
-        /**
-         * List的接口,传用户列表进去
+        /*
+          List的接口,传用户列表进去
          */
         listView.setMinWidth(330);
         listView.setMaxWidth(330);
@@ -455,16 +471,16 @@ public class Login{
         getdata.add(titlebox);
         top.add(getlist,0,0,2,1);
         Button send = new Button();
-        /**
-         * 发送消息的按钮接口
+        /*
+          发送消息的按钮接口
          */
         send.setText("发送消息");
         send.setMinWidth(55);
         send.setMinHeight(25);
         send.getStylesheets().add("the.css");
         HBox textk = new HBox();
-        /**
-         * 发送文件的按钮接口
+        /*
+          发送文件的按钮接口
          */
         textk.setAlignment(Pos.CENTER);
         textk.setMinWidth(55);
@@ -478,20 +494,12 @@ public class Login{
         TEMP.setMaxWidth(520);
         TEMP.setMinWidth(520);
 //        TEMP.setGridLinesVisible(true);
-        HBox HSEND = new HBox();
-        HSEND.setAlignment(Pos.CENTER_RIGHT);
-        HSEND.getChildren().add(send);
-        TEMP.add(inputarea, 0, 0, 1, 1);
-        TEMP.add(HSEND, 0, 1, 1, 1);
-        Hgetinput.getChildren().add(TEMP);
+        boxhandel(send, Hgetinput, TEMP, inputarea);
         VBox Userlist = new VBox();//右边的用户列表
         Background hm = new Background(new BackgroundFill(Color.rgb(245, 245, 245), CornerRadii.EMPTY, Insets.EMPTY));
         Hmessage.setBackground(hm);
         BorderPane borderPane = new BorderPane();//自由布局
         Scene scene = new Scene(borderPane, WIDTH, HEIGH);
-        /**
-         *
-         */
         send.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             Thread sendmessgaeall = new sendmessageall(Client, userlist, inputarea);
             sendmessgaeall.start();
@@ -506,13 +514,11 @@ public class Login{
             getlist.setMaxWidth(520+(double)newValue-WIDTH);
             getlist.setMinWidth(520+(double)newValue-WIDTH);
         });
-        scene.heightProperty().addListener((observable, oldValue, newValue)->{
-            listView.setMinHeight(260+(double)newValue-HEIGH);
-        } );
+        scene.heightProperty().addListener((observable, oldValue, newValue)-> listView.setMinHeight(260+(double)newValue-HEIGH));
         GridPane bt = new GridPane();
         bt.add(Hgetinput, 0, 0, 1, 1);
-        /**
-         * 这里是最右边的文本框,打印后台输出消息
+        /*
+          这里是最右边的文本框,打印后台输出消息
          */
         infarea.setWrapText(true);
         infarea.getStylesheets().add("the.css");
@@ -528,11 +534,7 @@ public class Login{
         Userlist.getChildren().add(listView);
         all.setScene(scene);
         all.setTitle( ID+"   群聊");
-        Thread linkuser = new Linkuser(infarea);
-        linkuser.start();
-        all.setOnCloseRequest(event -> {
-            System.exit(0);
-        });
+        all.setOnCloseRequest(event -> System.exit(0));
         File ico = new File("ico\\Message.png");
         try {
             all.getIcons().add(new Image(new FileInputStream(ico)));
@@ -540,6 +542,15 @@ public class Login{
             throw new RuntimeException(e);
         }
         all.show();
+    }
+
+    public static void boxhandel(Button send, HBox hgetinput, GridPane TEMP, TextArea inputarea) {
+        HBox HSEND = new HBox();
+        HSEND.setAlignment(Pos.CENTER_RIGHT);
+        HSEND.getChildren().add(send);
+        TEMP.add(inputarea, 0, 0, 1, 1);
+        TEMP.add(HSEND, 0, 1, 1, 1);
+        hgetinput.getChildren().add(TEMP);
     }
 
     public static void Interface(HBox hmessage, GridPane top, HBox textk, HBox hgetinput, Scene scene,ListView<Object> getlist) {
@@ -579,22 +590,22 @@ public class Login{
             Files.createDirectories(voice);
             Files.createDirectories(message);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("error");
         }
-        Stage onepeople = new Stage();
+        javafx.stage.Stage onepeople = new javafx.stage.Stage();
         onepeople.setTitle(title);
-        /**
-         * 向服务器发送在线的线程,直接在开头就会运行
+        /*
+          向服务器发送在线的线程,直接在开头就会运行
          */
         HBox Hmessage = new HBox();//左上角的聊天框
         GridPane top = new GridPane();
-        /**
-         * 输入区的接口,获取输入内容
+        /*
+          输入区的接口,获取输入内容
          */
         TextArea inputarea = new TextArea();
         inputarea.setMinWidth(520);
-        /**
-         * 输出区的接口,打印别人说的内容
+        /*
+          输出区的接口,打印别人说的内容
          */
         ObservableList<Object> getdata = FXCollections.observableArrayList();
         ListView<Object> getlist = new ListView<>(getdata);
@@ -627,7 +638,7 @@ public class Login{
             String inf = new String(result,0,256);
             SocketAddress address = new InetSocketAddress(inf.split("//")[1], Integer.parseInt(inf.split("//")[2]));
             sendmget(address, Client, new String(result, 256, result.length - 256).hashCode(), myinf());
-            method3("message\\"+getd.split("//")[3]+"\\"+"allmessage.txt",Login.ID + ":" + formattime+"\n"+new String(result, 256, result.length - 256));
+            method3("message\\"+getd.split("//")[3]+"\\"+"allmessage.txt", Stage.ID + ":" + formattime+"\n"+new String(result, 256, result.length - 256));
         }
         inputarea.setWrapText(true);
         inputarea.getStylesheets().add("the.css");
@@ -635,8 +646,8 @@ public class Login{
         getlist.setMinHeight(260);
         top.add(getlist, 0, 0, 2, 1);
         Button send = new Button();
-        /**
-         * 发送消息的按钮接口
+        /*
+          发送消息的按钮接口
          */
         send.setText("发送消息");
         send.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->
@@ -644,14 +655,12 @@ public class Login{
             Thread sendoneuser = new sendoneuser(Client, inputarea, title, getdata,getlist,mess);
             sendoneuser.start();
         });
-        Thread showimage = new showimage(getdata,getlist,title);
-        showimage.start();
         send.setMinWidth(55);
         send.setMinHeight(25);
         send.getStylesheets().add("the.css");
         HBox textk = new HBox();
-        /**
-         * 发送文件的按钮接口
+        /*
+          发送文件的按钮接口
          */
         Text functiondes = new Text(" 发送文件  ");
         Text f2 = new Text("  发送图片  ");
@@ -668,7 +677,7 @@ public class Login{
         functiondes.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("选择文件");
-            File file = fileChooser.showOpenDialog(new Stage());
+            File file = fileChooser.showOpenDialog(new javafx.stage.Stage());
             if(file!=null) {
                 if((file.getName()).getBytes(StandardCharsets.UTF_8).length>60||file.length()>2146483648L)
                 {
@@ -684,8 +693,8 @@ public class Login{
                 }
             }
         });
-        /**
-         * 发图片
+        /*
+          发图片
          */
         f2.addEventHandler(MouseEvent.MOUSE_CLICKED, e->{
             FileChooser fileChooser = new FileChooser();
@@ -696,7 +705,7 @@ public class Login{
                 new FileChooser.ExtensionFilter("BMP", "*.bmp"),
                 new FileChooser.ExtensionFilter("PNG", "*.png")
             );
-            File file = fileChooser.showOpenDialog(new Stage());
+            File file = fileChooser.showOpenDialog(new javafx.stage.Stage());
             if(file!=null) {
                 if((file.getName()).getBytes(StandardCharsets.UTF_8).length>60||file.length()>2146483648L)
                 {
@@ -731,12 +740,7 @@ public class Login{
         HBox Hgetinput = new HBox();//左下的输入框
         GridPane TEMP = new GridPane();
         TEMP.setMaxWidth(520);
-        HBox HSEND = new HBox();
-        HSEND.setAlignment(Pos.CENTER_RIGHT);
-        HSEND.getChildren().add(send);
-        TEMP.add(inputarea, 0, 0, 1, 1);
-        TEMP.add(HSEND, 0, 1, 1, 1);
-        Hgetinput.getChildren().add(TEMP);
+        boxhandel(send, Hgetinput, TEMP, inputarea);
         Background hm = new Background(new BackgroundFill(Color.rgb(245, 245, 245), CornerRadii.EMPTY, Insets.EMPTY));
         Hmessage.setBackground(hm);
         BorderPane borderPane = new BorderPane();//自由布局
@@ -744,26 +748,24 @@ public class Login{
         Interface(Hmessage, top, textk, Hgetinput, scene, getlist);
         GridPane bt = new GridPane();
         bt.add(Hgetinput, 0, 0, 1, 1);
-        /**
-         * 这里是最右边的文本框,打印后台输出消息
+        /*
+          这里是最右边的文本框,打印后台输出消息
          */
         borderPane.setLeft(Hmessage);
         borderPane.setBottom(bt);
         onepeople.setScene(scene);
         Thread receive = new receiveone(Client, title,getdata,getlist,mess);//title就是用户信息了
         receive.start();
-        Thread showvoice = new showvoice(getdata,getlist,title);
-        showvoice.start();
+        pollone pollone = new pollone(getdata,getlist,title);
+        pollone.poll();
         getlist.getSelectionModel().selectedItemProperty().addListener(
-                (ObservableValue<? extends Object> ov, Object old_val,
+                (ObservableValue<?> ov, Object old_val,
                  Object new_val) -> {
                     if (new_val != null) {
-//                        System.out.println(new_val);
                         if (String.valueOf(new_val).contains("done\\")&&String.valueOf(new_val).contains("fzvoice"))
                         {
                             try {
                                 infarea.appendText("播放录音");
-//                                File file = new File(String.valueOf(new_val));
                                 new Thread(()->play(String.valueOf(new_val))).start();
                             }catch (Exception e)
                             {
@@ -775,8 +777,6 @@ public class Login{
         onepeople.setOnCloseRequest(event -> {
             titlelsit.remove(title);
             receive.stop();
-            showimage.stop();
-            showvoice.stop();
         });
         scene.widthProperty().addListener((observable, oldValue, newValue) -> {
             getlist.setMinWidth((double)newValue);

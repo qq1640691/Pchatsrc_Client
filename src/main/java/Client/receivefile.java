@@ -1,15 +1,12 @@
 package Client;
 
-import Code.AES;
 import javafx.scene.control.TextArea;
 
 import java.net.DatagramSocket;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static Client.Chat.dealpacketfile;
-import static GUI.Login.filebyte;
+import static GUI.Stage.filebyte;
 
 /**
  * 接收数据的线程

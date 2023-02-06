@@ -11,7 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import static GUI.Login.infarea;
+import static GUI.Stage.infarea;
 
 public class showfile {
 
@@ -41,7 +41,11 @@ public class showfile {
                                 getlist.setItems(getdata);
                                 try {
                                     input.close();
-                                    fs.renameTo(new File("done\\"+ System.currentTimeMillis()+fs.getName()));
+                                    File file = new File("done\\"+ System.currentTimeMillis()+fs.getName());
+                                    if (!file.getParentFile().exists()) {
+                                      file.getParentFile().mkdirs();
+                                    }
+                                    fs.renameTo(file);
                                     infarea.appendText("图片已显示\n");
                                 } catch (IOException e) {
                                     throw new RuntimeException(e);
@@ -65,9 +69,12 @@ public class showfile {
                 if (!fs.isDirectory()) {
                     if (!fs.getName().endsWith("fzt")) {
                         Platform.runLater(()->{
-                            File fshow = new File("done\\"+ System.currentTimeMillis()+fs.getName());
-                            fs.renameTo(fshow);
-                            getdata.add(String.valueOf(fshow));
+                            File file = new File("done\\"+ System.currentTimeMillis()+fs.getName());
+                            if (!file.getParentFile().exists()) {
+                              file.getParentFile().mkdirs();
+                            }
+                            fs.renameTo(file);
+                            getdata.add(String.valueOf(file));
                             getlist.setItems(getdata);
                         });
                     }
@@ -83,10 +90,12 @@ public class showfile {
 	            return;
 	        }
             File[] fa = f.listFiles();//用数组接收
-         for (File fs : fa) {//循环遍历
-                if (!fs.isDirectory()) {
-                    fs.delete();
+        if (fa != null) {
+            for (File fs : fa) {//循环遍历
+                    if (!fs.isDirectory()) {
+                        fs.delete();
+                    }
                 }
-            }
+        }
     }
 }

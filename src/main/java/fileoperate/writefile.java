@@ -1,12 +1,10 @@
 package fileoperate;
 
-import GUI.Login;
-
 import java.io.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static GUI.Login.BYTELENGTH;
+import static GUI.Stage.BYTELENGTH;
 
 /**
  *  完成数据内容的插入
@@ -131,36 +129,4 @@ public class writefile {
         tempd.remove(infs[7]);
         filehm.put(infs[4],tempd);
     }
-
-//    public static synchronized void mergebyte(byte[] result,ConcurrentHashMap<String,CopyOnWriteArrayList<String>> filehm)
-//    {
-//        System.out.println(result.length);
-//        String inf = new String(result,0,256);
-////        System.out.println(inf);
-//        String[] infs = inf.split("//");
-//        byte[] temp = filecontent.get(infs[4]);
-//        System.arraycopy(result, 256,  temp, Integer.parseInt(infs[7])*744,result.length - 256);
-//        filecontent.put(infs[4],temp);
-//        CopyOnWriteArrayList<String> tempd = filehm.get(infs[4]);
-//        tempd.remove(infs[7]);
-//        filehm.put(infs[4],tempd);
-//    }
-//
-//    public static void ByteArrayToFile(byte[] arr,String filename) {
-//        try (
-//                BufferedInputStream bis = new BufferedInputStream(new ByteArrayInputStream(arr));
-//                FileOutputStream fileOutputStream = new FileOutputStream(filename);
-//                BufferedOutputStream bos = new BufferedOutputStream(fileOutputStream)
-//        ) {
-//            int data;
-//            while ((data = bis.read()) != -1) {
-//                bos.write(data);
-//            }
-//            bos.flush();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-
 }

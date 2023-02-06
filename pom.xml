@@ -3,7 +3,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>groupId</groupId>
     <artifactId>Pchat</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -24,16 +23,21 @@
             <artifactId>commons-io</artifactId>
             <version>2.11.0</version>
         </dependency>
-        <dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.bytedeco</groupId>-->
+<!--            <artifactId>javacv</artifactId>-->
+<!--            <version>1.4.4</version>-->
+<!--        </dependency>-->
+                <dependency>
             <groupId>org.bytedeco</groupId>
             <artifactId>javacv-platform</artifactId>
             <version>1.4.4</version>
           </dependency>
-        <dependency>
-    <groupId>org.bytedeco.javacpp-presets</groupId>
-    <artifactId>ffmpeg</artifactId>
-    <version>4.1-1.4.4</version>
-</dependency>
+<!--        <dependency>-->
+<!--    <groupId>org.bytedeco.javacpp-presets</groupId>-->
+<!--    <artifactId>ffmpeg</artifactId>-->
+<!--    <version>4.1-1.4.4</version>-->
+<!--</dependency>-->
     </dependencies>
        <build>
            <finalName>UDP</finalName>
@@ -51,7 +55,7 @@
           <archive>
             <manifest>
               <!--更改为自己的主函数启动类-->
-              <mainClass>GUI.Login</mainClass>
+              <mainClass>GUI.Main</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -87,7 +91,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>GUI.Login</mainClass>
+                            <mainClass>GUI.Main</mainClass>
                            	<!--这个为pom依赖存放的路径-->
                             <classpathPrefix>libs/</classpathPrefix>
                         </manifest>

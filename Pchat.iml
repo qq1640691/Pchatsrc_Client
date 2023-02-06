@@ -14,7 +14,9 @@
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.11.0" level="project" />
     <orderEntry type="library" name="Maven: org.bytedeco:javacv-platform:1.4.4" level="project" />
     <orderEntry type="library" name="Maven: org.bytedeco:javacv:1.4.4" level="project" />
+    <orderEntry type="library" name="Maven: org.bytedeco:javacpp:1.4.4" level="project" />
     <orderEntry type="library" name="Maven: org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4" level="project" />
+    <orderEntry type="library" name="Maven: org.bytedeco.javacpp-presets:ffmpeg:4.1-1.4.4" level="project" />
     <orderEntry type="library" name="Maven: org.bytedeco.javacpp-presets:flycapture:2.13.3.31-1.4.4" level="project" />
     <orderEntry type="library" name="Maven: org.bytedeco.javacpp-presets:libdc1394:2.2.5-1.4.4" level="project" />
     <orderEntry type="library" name="Maven: org.bytedeco.javacpp-presets:libfreenect:0.5.3-1.4.4" level="project" />
@@ -135,7 +137,5 @@
     <orderEntry type="library" name="Maven: org.bytedeco.javacpp-presets:tesseract:macosx-x86_64:4.0.0-1.4.4" level="project" />
     <orderEntry type="library" name="Maven: org.bytedeco.javacpp-presets:tesseract:windows-x86:4.0.0-1.4.4" level="project" />
     <orderEntry type="library" name="Maven: org.bytedeco.javacpp-presets:tesseract:windows-x86_64:4.0.0-1.4.4" level="project" />
-    <orderEntry type="library" name="Maven: org.bytedeco.javacpp-presets:ffmpeg:4.1-1.4.4" level="project" />
-    <orderEntry type="library" name="Maven: org.bytedeco:javacpp:1.4.4" level="project" />
   </component>
 </module>

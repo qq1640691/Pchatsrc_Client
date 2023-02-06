@@ -26,8 +26,8 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.charset.StandardCharsets;
 
-import static GUI.Login.Close;
-import static GUI.Login.KEY;
+import static GUI.Stage.Close;
+import static GUI.Stage.KEY;
 
 public class Vchat extends Thread{
     String ip;

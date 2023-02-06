@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 
 import java.net.DatagramSocket;
 
-import static GUI.Login.login;
+import static GUI.Stage.login;
 import static natserver.natserver.socket;
 
 public class Main extends Application {

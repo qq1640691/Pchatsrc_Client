@@ -1,16 +1,14 @@
 package natserver;
 
-import Code.AES;
 import Code.RSACoder;
-import GUI.Login;
 
 import java.io.IOException;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
-import static GUI.Login.KEY;
-import static GUI.Login.RSApublickey;
+import static GUI.Stage.KEY;
+import static GUI.Stage.RSApublickey;
 
 
 public class natserver {
@@ -23,7 +21,6 @@ public class natserver {
         byte[] send;
         try {
             send = RSACoder.encryptByPublicKey((KEY+clientid).getBytes(StandardCharsets.UTF_8),RSApublickey);
-//            send = AES.encrypt(clientid.getBytes(StandardCharsets.UTF_8), Login.KEY);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static GUI.Login.*;
+import static GUI.Stage.*;
 import static fileoperate.fileinf.getfileinf;
 
 public class sendinf {
@@ -163,13 +163,14 @@ public class sendinf {
             throw new RuntimeException(e);
         }
     }
-
         /**
-     * 把一个文件转化为byte字节数组。
-     *
-     * @return
-     */
+         * 把一个文件转化为byte字节数组。
+         */
     public static byte[] fileConvertToByteArray(File file) {
+        return filetobyte(file);
+    }
+
+    public static byte[] filetobyte(File file) {
         byte[] data = null;
 
         try {

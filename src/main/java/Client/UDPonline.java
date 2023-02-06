@@ -18,52 +18,30 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import static GUI.Login.all;
-import static GUI.Login.userlist;
+import static GUI.Stage.all;
+import static GUI.Stage.userlist;
 public class UDPonline extends Thread{
 
     @Override
     public synchronized void run() {
-        int i=0;
-        while(true)
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        if(userlist.size()==0)
         {
-            try {
-                Thread.sleep(5000+i* 100000L);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            if(userlist.size()==0)
+            Platform.runLater(()->
             {
-                Platform.runLater(()->
-                {
-                    Stage aleat = new Stage();
-                    Text err = new Text();
-                    err.setText("抱歉,服务器暂未运行");
-                    err.setTextAlignment(TextAlignment.CENTER);
-                    err.setFill(Color.RED);
-                    err.setFont(Font.font(null, FontWeight.BOLD, 18));
-                    HBox theerr = new HBox();
-                    theerr.setAlignment(Pos.CENTER);
-                    theerr.getChildren().add(err);
-                    theerr.setPadding(new Insets(-30, 0, 0, 0));
-                    Scene scene = new Scene(theerr, 300, 160);
-                    aleat.setScene(scene);
-                    aleat.setResizable(false);
-                    File ico = new File("ico\\alert.png");
-                    try {
-                        aleat.getIcons().add(new Image(new FileInputStream(ico)));
-                    } catch (FileNotFoundException e) {
-                        throw new RuntimeException(e);
-                    }
-                    aleat.show();
-                    all.close();
-                    aleat.setOnCloseRequest(event -> {
-                        System.exit(0);
-                    });
+                Stage aleat = new Stage();
+                Text err = new Text();
+                err.setText("抱歉,服务器暂未运行");
+                GUI.Stage.newalert(aleat, err);
+                all.close();
+                aleat.setOnCloseRequest(event -> {
+                    System.exit(0);
                 });
-            }
-            i++;
-
+            });
         }
     }
 }

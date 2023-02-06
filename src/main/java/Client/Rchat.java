@@ -1,6 +1,7 @@
 package Client;
 
 import Code.AES;
+import thesendinf.sendinf;
 
 import javax.sound.sampled.*;
 import java.io.ByteArrayOutputStream;
@@ -14,8 +15,8 @@ import java.net.SocketAddress;
 import java.nio.charset.StandardCharsets;
 
 import static Client.Vchat.sendhead;
-import static GUI.Login.Close;
-import static GUI.Login.KEY;
+import static GUI.Stage.Close;
+import static GUI.Stage.KEY;
 
 public class Rchat extends Thread{
 
@@ -86,22 +87,7 @@ public class Rchat extends Thread{
      */
     private static  byte[] fileConvertToByteArray(File file) {
         if(file.length()>0) {
-            byte[] data = null;
-            try {
-                FileInputStream fis = new FileInputStream(file);
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-                int len;
-                byte[] buffer = new byte[1024];
-                while ((len = fis.read(buffer)) != -1) {
-                    baos.write(buffer, 0, len);
-                }
-                data = baos.toByteArray();
-                fis.close();
-                baos.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            byte[] data=sendinf.filetobyte(file);
             file.delete();
             return data;
         }

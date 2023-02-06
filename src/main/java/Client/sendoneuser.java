@@ -1,13 +1,10 @@
 package Client;
 
-import GUI.Login;
+import GUI.Stage;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
@@ -16,11 +13,10 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static Client.Chat.myinf;
-import static GUI.Login.infarea;
+import static GUI.Stage.infarea;
 import static Regular.reguler.method3;
 import static thesendinf.sendinf.sendstrone;
 
@@ -63,17 +59,10 @@ public class sendoneuser extends Thread {
                     if(mess.size()==0) {
                         mess.add(input);
                         sendstrone(address, Client, input, myinf());
-                        getdata.add(Login.ID + ":" + format);
-                        TextArea print = new TextArea();
-                        print.setText(input);
-                        print.setWrapText(true);
-                        print.setEditable(false);
-                        print.setPrefSize(500, 100);
-                        print.setStyle("-fx-font-size: 18 ;-fx-font-weight:bold");
-                        getdata.add(print);
-                        getlist.setItems(getdata);
+                        getdata.add(Stage.ID + ":" + format);
+                        Chat.print(getdata, input, getlist);
                         area.setText("");
-                        method3("message\\" + inf.split("//")[2] + "\\" + "allmessage.txt", Login.ID + ":" + format + "\n" + input);
+                        method3("message\\" + inf.split("//")[2] + "\\" + "allmessage.txt", Stage.ID + ":" + format + "\n" + input);
                     }
                     else {
                         for (String s:mess)
@@ -87,23 +76,13 @@ public class sendoneuser extends Thread {
                         }
                         mess.add(input);
                         sendstrone(address, Client, input, myinf());
-                        getdata.add(Login.ID + ":" + format);
-                        TextArea print = new TextArea();
-                        print.setText(input);
-                        print.setWrapText(true);
-                        print.setEditable(false);
-                        print.setPrefSize(500, 100);
-                        print.setStyle("-fx-font-size: 18 ;-fx-font-weight:bold");
-                        getdata.add(print);
-                        getlist.setItems(getdata);
+                        getdata.add(Stage.ID + ":" + format);
+                        Chat.print(getdata, input, getlist);
                         area.setText("");
-                        method3("message\\" + inf.split("//")[2] + "\\" + "allmessage.txt", Login.ID + ":" + format + "\n" + input);
+                        method3("message\\" + inf.split("//")[2] + "\\" + "allmessage.txt", Stage.ID + ":" + format + "\n" + input);
                     }
                 }
             });
-
         }
-//             System.gc();
-
     }
 }

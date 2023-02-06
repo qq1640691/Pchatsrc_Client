@@ -2,14 +2,12 @@ package Client;
 
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
 
 import java.net.DatagramSocket;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static Client.Chat.dealpacketone;
-import static GUI.Login.allbyte;
-import static GUI.Login.chat;
+import static GUI.Stage.allbyte;
 
 /**
  * 接收数据的线程

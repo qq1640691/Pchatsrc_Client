@@ -14,7 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static GUI.Login.*;
+import static GUI.Stage.*;
 import static fileoperate.showfile.delecttemp;
 
 public class showvideo extends Thread{

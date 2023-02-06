@@ -1,6 +1,6 @@
 package Client;
 
-import GUI.Login;
+import GUI.Stage;
 import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 
@@ -16,7 +16,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static Client.Chat.myinf;
-import static GUI.Login.*;
+import static GUI.Stage.*;
 import static Regular.reguler.method3;
 import static thesendinf.sendinf.sendstr;
 
@@ -60,17 +60,10 @@ public class sendmessageall extends Thread {
             Platform.runLater(() -> {
                 //更新JavaFX的主线程的代码放在此处
                 if (!input.equals("")&&input.getBytes(StandardCharsets.UTF_8).length<800) {
-                    getdata.add(Login.ID + ":" + formattime);
-                    TextArea print = new TextArea();
-                    print.setText(input);
-                    print.setWrapText(true);
-                    print.setEditable(false);
-                    print.setPrefSize(500,100);
-                    print.setStyle("-fx-font-size: 18 ;-fx-font-weight:bold");
-                    getdata.add(print);
-                    getlist.setItems(getdata);
+                    getdata.add(Stage.ID + ":" + formattime);
+                    Chat.printmessage(getdata, input, getlist);
                     area.setText("");
-                    method3("allmessage\\allmessage.txt",Login.ID + ":" + formattime+"\n"+input);
+                    method3("allmessage\\allmessage.txt", Stage.ID + ":" + formattime+"\n"+input);
                 }
             });
         }

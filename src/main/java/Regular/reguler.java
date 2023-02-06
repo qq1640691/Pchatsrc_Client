@@ -42,21 +42,18 @@ public class reguler {
     }
 
     public static void method3(String fileName, String content) {
-    try {
-        // 打开一个随机访问文件流，按读写方式
-        RandomAccessFile randomFile = new RandomAccessFile(fileName, "rw");
-        // 文件长度，字节数
-        long fileLength = randomFile.length();
-        // 将写文件指针移到文件尾。
-        randomFile.seek(fileLength);
-        randomFile.writeBytes(new String(content.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1));
-        randomFile.writeBytes("\r\n");
-        randomFile.close();
-    } catch (IOException e) {
-        e.printStackTrace();
+        try {
+            // 打开一个随机访问文件流，按读写方式
+            RandomAccessFile randomFile = new RandomAccessFile(fileName, "rw");
+            // 文件长度，字节数
+            long fileLength = randomFile.length();
+            // 将写文件指针移到文件尾。
+            randomFile.seek(fileLength);
+            randomFile.writeBytes(new String(content.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1));
+            randomFile.writeBytes("\r\n");
+            randomFile.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-}
-
-
-
 }

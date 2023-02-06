@@ -2,7 +2,7 @@ package Client;
 
 import java.io.*;
 
-import static GUI.Login.*;
+import static GUI.Stage.*;
 
 public class showvc extends Thread{
     @Override
@@ -40,7 +40,7 @@ public class showvc extends Thread{
             }
             bos.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("error");
         }
     }
 }

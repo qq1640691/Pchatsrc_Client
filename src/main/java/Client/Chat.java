@@ -1,5 +1,6 @@
 package Client;
 
+import GUI.Stage;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
@@ -9,9 +10,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
 import Code.AES;
-import GUI.Login;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static Code.SHA.getResult;
-import static GUI.Login.*;
+import static GUI.Stage.*;
 import static Regular.reguler.method3;
 import static fileoperate.fileinf.filetheinf;
 import static fileoperate.writefile.*;
@@ -61,8 +60,8 @@ public class Chat {
             case "list"://传入的是用户列表
                 String get = new String(result,4,result.length-4);
                 String thelist =get.replace("#","");
-                /**
-                 * 把用户上一次发送在线的时间给标记,如果没有收到这个标记,就gg.
+                /*
+                  把用户上一次发送在线的时间给标记,如果没有收到这个标记,就gg.
                  */
                 if (!userlist.contains(thelist)) {
                     userzx.put(thelist,System.currentTimeMillis());
@@ -72,17 +71,17 @@ public class Chat {
                     userzx.put(thelist,System.currentTimeMillis());
                 }
                 Platform.runLater(() -> {
-                    Login.listView.getItems().clear();
-                    Login.data.addAll(userlist);
-                    Login.listView.setItems(Login.data);
+                    Stage.listView.getItems().clear();
+                    Stage.data.addAll(userlist);
+                    Stage.listView.setItems(Stage.data);
                 });
-                /***
-                 * 这里默认所有用户已经下线
+                /*
+                 这里默认所有用户已经下线
                  */
                 break;
             case "errr":
                 Platform.runLater(() -> {
-                    Stage aleat = new Stage();
+                    javafx.stage.Stage aleat = new javafx.stage.Stage();
                     Text err = new Text();
                     err.setText("用户名重复,请重新输入");
                     err.setTextAlignment(TextAlignment.CENTER);
@@ -90,9 +89,7 @@ public class Chat {
                     err.setFont(Font.font(null, FontWeight.BOLD,18));
                     POP(aleat, err);
                     all.close();
-                    aleat.setOnCloseRequest(e->{
-                        System.exit(0);
-                    });
+                    aleat.setOnCloseRequest(e-> System.exit(0));
                 });
                 break;
             case "mesl":
@@ -105,20 +102,13 @@ public class Chat {
                 String message = new String(result,256,result.length-256);
                 Platform.runLater(()->{
                     getdata.add(userinf);
-                    TextArea print = new TextArea();
-                    print.setText(message);
-                    print.setWrapText(true);
-                    print.setEditable(false);
-                    print.setPrefSize(500,100);
-                    print.setStyle("-fx-font-size: 18 ;-fx-font-weight:bold");
-                    getdata.add(print);
-                    getlist.setItems(getdata);
-                    method3("allmessage\\allmessage.txt",Login.ID + ":" + formattime+"\n"+message);
+                    print(getdata, message, getlist);
+                    method3("allmessage\\allmessage.txt", Stage.ID + ":" + formattime+"\n"+message);
                 });
                 break;
             case "meso"://单人消息
-                /**
-                 * 先判断是否有窗口,
+                /*
+                  先判断是否有窗口,
                  */
                 if(areashow.size()==0)//没有窗口,一定要新建
                 {
@@ -136,11 +126,26 @@ public class Chat {
         }
     }
 
+    public static void print(ObservableList<Object> getdata, String message, ListView<Object> getlist) {
+        printmessage(getdata, message, getlist);
+    }
+
+    public static void printmessage(ObservableList<Object> getdata, String message, ListView<Object> getlist) {
+        TextArea print = new TextArea();
+        print.setText(message);
+        print.setWrapText(true);
+        print.setEditable(false);
+        print.setPrefSize(500,100);
+        print.setStyle("-fx-font-size: 18 ;-fx-font-weight:bold");
+        getdata.add(print);
+        getlist.setItems(getdata);
+    }
+
     public static void doarea(byte[] result, DatagramSocket Client) {
         String[] creattitle = new String(result,0,256).split("//");
         String newtitle = "/"+creattitle[1]+"//"+creattitle[2]+"//"+creattitle[3];
         Platform.runLater(() -> {
-            Login.chatone(Client,newtitle,result);
+            Stage.chatone(Client,newtitle,result);
             titlelsit.add(newtitle);
             allbyte.remove(result);
         });
@@ -170,7 +175,7 @@ public class Chat {
                 String inf = new String(result, 0, 256);
                 SocketAddress address = new InetSocketAddress(inf.split("//")[1], Integer.parseInt(inf.split("//")[2]));
                 sendmget(address, Client, new String(result, 256, result.length - 256).hashCode(), myinf());
-                method3("message\\" + name[2] + "\\" + "allmessage.txt", Login.ID + ":" + format + "\n" + new String(result, 256, result.length - 256));
+                method3("message\\" + name[2] + "\\" + "allmessage.txt", Stage.ID + ":" + format + "\n" + new String(result, 256, result.length - 256));
             });
         }
         if(type.equals("megt")){
@@ -237,7 +242,7 @@ public class Chat {
                     }
                     break;
                     case "fire"://文件重传.
-                        fileretran(result, Client, thefilepath);
+                        fileretran(result, Client);
                         break;
                     case "firt":
                         String inft = new String(result, 0, result.length);
@@ -272,32 +277,32 @@ public class Chat {
         int delay = Integer.parseInt(sendthedelay(inf[1].replace("/","")));
         if(filetopart.get(inf[4]).size()==0)
         {
-            String sendbuf = "fils/"+myinf()+"//"+inf[4];
-            byte[] thesend = AES.encrypt(sendbuf.getBytes(StandardCharsets.UTF_8),KEY);
-            SocketAddress address = new InetSocketAddress(inf[1], Integer.parseInt(inf[2]));
-            DatagramPacket packet2 = new DatagramPacket(Objects.requireNonNull(thesend),thesend.length,address);
-            client.send(packet2);
-            return;
+            sendfinish(inf, client);
         }
-        for(String part:filetopart.get(inf[4]))
-        {
-            String sendbuf = "fire/"+myinf()+"//"+inf[4]+"//"+part+"//";
-            if (sendbuf.getBytes(StandardCharsets.UTF_8).length<256)
-            {
-                sendbuf=sendbuf+"*";
+        else {
+            for (String part : filetopart.get(inf[4])) {
+                String sendbuf = "fire/" + myinf() + "//" + inf[4] + "//" + part + "//";
+                if (sendbuf.getBytes(StandardCharsets.UTF_8).length < 256) {
+                    sendbuf = sendbuf + "*";
+                }
+                byte[] thesend = AES.encrypt(sendbuf.getBytes(StandardCharsets.UTF_8), KEY);
+                SocketAddress address = new InetSocketAddress(inf[1], Integer.parseInt(inf[2]));
+                DatagramPacket packet2 = new DatagramPacket(Objects.requireNonNull(thesend), thesend.length, address);
+                client.send(packet2);
+                Thread.sleep(delay);
             }
-            byte[] thesend = AES.encrypt(sendbuf.getBytes(StandardCharsets.UTF_8),KEY);
-            SocketAddress address = new InetSocketAddress(inf[1], Integer.parseInt(inf[2]));
-            DatagramPacket packet2 = new DatagramPacket(Objects.requireNonNull(thesend),thesend.length,address);
-            client.send(packet2);
-            Thread.sleep(delay);
+            sendfinish(inf, client);
         }
+    }
+
+    public static void sendfinish(String[] inf, DatagramSocket client) throws Exception {
         String sendbuf = "fils/"+myinf()+"//"+inf[4];
         byte[] thesend = AES.encrypt(sendbuf.getBytes(StandardCharsets.UTF_8),KEY);
         SocketAddress address = new InetSocketAddress(inf[1], Integer.parseInt(inf[2]));
         DatagramPacket packet2 = new DatagramPacket(Objects.requireNonNull(thesend),thesend.length,address);
         client.send(packet2);
     }
+
     /**
      * 计算用户之间的延迟,储存到hashmap
      */
@@ -313,7 +318,7 @@ public class Chat {
     /**
      * 接收对方索要的缺失文件块的信息,发送给对方.少写了file
      */
-    public static void fileretran(byte[] resule, DatagramSocket Client,ConcurrentHashMap<String, String> thefilepath) throws Exception {
+    public static void fileretran(byte[] resule, DatagramSocket Client) throws Exception {
 //        long opentime = System.currentTimeMillis();
         String partinf = new String(resule,0,resule.length);
         String[] inf = partinf.split("//");

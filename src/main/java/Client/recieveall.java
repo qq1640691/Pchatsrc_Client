@@ -7,7 +7,7 @@ import java.net.DatagramSocket;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static Client.Chat.*;
-import static GUI.Login.*;
+import static GUI.Stage.*;
 
 /**
  * 接收数据的线程

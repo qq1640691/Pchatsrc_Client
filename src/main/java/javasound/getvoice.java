@@ -2,22 +2,11 @@ package javasound;
 
 import Client.sendfile;
 import javafx.application.Platform;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import javax.sound.sampled.*;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,23 +33,7 @@ public class getvoice {
             Stage alert = new Stage();
             Text err = new Text();
             err.setText("正在录音,关闭停止录音");
-            err.setTextAlignment(TextAlignment.CENTER);
-            err.setFill(Color.RED);
-            err.setFont(Font.font(null, FontWeight.BOLD, 18));
-            HBox theerr = new HBox();
-            theerr.setAlignment(Pos.CENTER);
-            theerr.getChildren().add(err);
-            theerr.setPadding(new Insets(-30, 0, 0, 0));
-            Scene scene = new Scene(theerr, 300, 160);
-            alert.setScene(scene);
-            alert.setResizable(false);
-            File ico = new File("ico\\alert.png");
-            try {
-                alert.getIcons().add(new Image(new FileInputStream(ico)));
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-            alert.show();
+            GUI.Stage.newalert(alert, err);
             alert.setOnCloseRequest(e->{
                 targetDataLine.close();
                 try {

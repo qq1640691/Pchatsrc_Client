@@ -27,10 +27,8 @@ public class AES {
         cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(encryptKey.getBytes(), "AES"));
         return cipher.doFinal(content);
     }
-
     /**
      * AES加密为base 64 code
-     *
      * @param content 待加密的内容
      * @param encryptKey 加密密钥
      * @return 加密后的base 64 code
@@ -38,10 +36,8 @@ public class AES {
     public static byte[] encrypt(byte[] content, String encryptKey) throws Exception {
         return aesEncryptToBytes(content, encryptKey);
     }
-
     /**
      * AES解密
-     *
      * @param encryptBytes 待解密的byte[]
      * @param decryptKey 解密密钥
      * @return 解密后的String
@@ -56,11 +52,8 @@ public class AES {
 
         return decryptBytes;
     }
-
-
     /**
      * 将base 64 code AES解密
-     *
      * @param decryptKey 解密密钥
      * @return 解密后的string
      */

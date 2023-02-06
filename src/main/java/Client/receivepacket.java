@@ -1,12 +1,10 @@
 package Client;
 
-import Code.AES;
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
-import static GUI.Login.*;
+import static GUI.Stage.*;
 
 public class receivepacket extends Thread{
     DatagramSocket Client;
