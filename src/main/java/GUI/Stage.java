@@ -341,6 +341,7 @@ public class Stage {
         Path allmessage = Paths.get("allmessage");
         Path tempdri = Paths.get("temp");
         Path done = Paths.get("done");
+        Path record = Paths.get("record");
         try {
             Files.createDirectories(files);
             Files.createDirectories(image);
@@ -349,6 +350,7 @@ public class Stage {
             Files.createDirectories(allmessage);
             Files.createDirectories(tempdri);
             Files.createDirectories(done);
+            Files.createDirectories(record);
         } catch (IOException e) {
             System.out.println("error");
         }
