@@ -118,6 +118,7 @@ public class sendinf {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+//        System.out.println(address);
         DatagramPacket packet = new DatagramPacket(Objects.requireNonNull(send),send.length,address);
         try {
             client.send(packet);
@@ -135,9 +136,15 @@ public class sendinf {
         sendthestr(address, client, str, head);
     }
 
-    public static void sendmget(SocketAddress address, DatagramSocket client, int str, String myinf)
+    public static void sendmget(SocketAddress address, DatagramSocket client, String str, String myinf)
     {
         StringBuilder head = new StringBuilder("megt/" + myinf + "//");
+        sendthestr(address, client, str, head);
+    }
+
+    public static void sendvideo(SocketAddress address, DatagramSocket client, String str, String myinf)
+    {
+        StringBuilder head = new StringBuilder("vvvv/" + myinf + "//");
         sendthestr(address, client, String.valueOf(str), head);
     }
 

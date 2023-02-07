@@ -17,7 +17,7 @@ public class showvc extends Thread{
                     try {
                         playwav.play("temp\\" + s + "receive.wav");
                     } catch (Exception e) {
-                        System.out.println("错误内容");
+                        System.out.println("错误内容,无法播放");
                     }
                 }
                 if (file != null) {

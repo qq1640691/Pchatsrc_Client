@@ -42,12 +42,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import static Client.Chat.myinf;
 import static Client.playwav.play;
 import static Client.receivepacket.getfrema;
-//import static Client.receivepacket.getvoice;
+import static Code.SHA.getResult;
 import static Regular.reguler.*;
 import static javasound.getvoice.record;
 import static natserver.ping.sendthedelay;
-import static thesendinf.sendinf.fileConvertToByteArray;
-import static thesendinf.sendinf.sendmget;
+import static thesendinf.sendinf.*;
 
 
 public class Stage {
@@ -309,6 +308,7 @@ public class Stage {
         alert.show();
     }
 
+
     public static void Popbox(javafx.stage.Stage aleat, Text err) {
         POP(aleat, err);
     }
@@ -316,6 +316,13 @@ public class Stage {
     public static void POP(javafx.stage.Stage aleat, Text err) {
         newbox(aleat, err);
     }
+
+    /**
+     * 写一个标志位是否允许通话,
+     */
+
+    public static String showvideo= "allow";
+    public static String sendvideo = "no";
 
     public static ObservableList<String> data = FXCollections.observableArrayList();
     public static ListView<String> listView = new ListView<>(data);
@@ -352,7 +359,7 @@ public class Stage {
             Files.createDirectories(done);
             Files.createDirectories(record);
         } catch (IOException e) {
-            System.out.println("error");
+            System.out.println("文件建立 error");
         }
         new Thread(()-> {
             try {
@@ -402,12 +409,48 @@ public class Stage {
                                     break;
                                 case "de":
                                     delaybyte.add(bytes);
+                                    break;
+                                case "vv":
+                                    String[] theinf = new String(bytes,0,256).split("//");
+                                    SocketAddress address = new InetSocketAddress(theinf[1], Integer.parseInt(theinf[2]));
+                                    String MESS = new String(bytes,256,bytes.length-256);
+                                    /**
+                                     * 进行判断,如果是want,如果我方是00,说明没有人与我通话,他可以,如果为11,则发送no
+                                     */
+                                    switch (MESS)
+                                    {
+                                        case "want":
+                                            if(showvideo.equals("allow"))
+                                            {
+                                                infarea.appendText(theinf[3]+"想与您视频通话,请打开视频\n");
+                                                sendvideo(address,Client,"allow",myinf());
+                                            }
+                                            if(showvideo.equals("no"))
+                                            {
+                                                sendvideo(address,Client,"no",myinf());
+                                            }
+                                        break;
+                                        case "no":
+                                            infarea.appendText(theinf[3]+"正在与其他人通话,请等待\n");
+                                            break;
+                                        case "allow":
+                                            sendvideo="allow";
+                                            infarea.appendText("对方允许,可以通话\n");
+                                            sendvideo(address,Client,"allowed",myinf());
+                                            break;
+                                        case "allowed":
+                                            sendvideo="allow";
+                                            infarea.appendText("对方允许,可以通话\n");
+                                            break;
+                                    }
+                                    break;
                                 default:
                                     allbyte.add(bytes);
+                                    break;
                             }
                             packetbytes.remove(getbytes);
                         } catch (Exception e) {
-                            System.out.println("error");
+                            System.err.println("error");
                         }
                     }
                 }
@@ -421,9 +464,9 @@ public class Stage {
          */
         Thread UDPonline = new UDPonline();
         UDPonline.start();
-        Thread receive = new recieveall(Client, userlist,listView,data,getdata);
-        receive.start();
-        polling polling = new polling(Client,infarea,IP,PORT,ID);
+//        Thread receive = new recieveall(Client, userlist,listView,data,getdata);
+//        receive.start();
+        polling polling = new polling(Client,infarea,IP,PORT,ID,thefilepath,getdata);
         polling.poll();
         /*
           这个地方从列表点击获取,要从主函数里删掉
@@ -530,8 +573,6 @@ public class Stage {
         borderPane.setLeft(Hmessage);
         borderPane.setBottom(bt);
         borderPane.setRight(Userlist);
-        Thread receivefile = new receivefile(Client,infarea,thefilepath);
-        receivefile.start();
         Userlist.getChildren().add(intitle);
         Userlist.getChildren().add(listView);
         all.setScene(scene);
@@ -578,7 +619,6 @@ public class Stage {
     }
 
     public static int Close=1;
-
 
     public static void chatone(DatagramSocket Client, String title, byte[] result) {
         CopyOnWriteArrayList<String> mess = new CopyOnWriteArrayList<>();
@@ -639,7 +679,7 @@ public class Stage {
             getlist.setItems(getdata);
             String inf = new String(result,0,256);
             SocketAddress address = new InetSocketAddress(inf.split("//")[1], Integer.parseInt(inf.split("//")[2]));
-            sendmget(address, Client, new String(result, 256, result.length - 256).hashCode(), myinf());
+            sendmget(address, Client, getResult(new String(result, 256, result.length - 256)), myinf());
             method3("message\\"+getd.split("//")[3]+"\\"+"allmessage.txt", Stage.ID + ":" + formattime+"\n"+new String(result, 256, result.length - 256));
         }
         inputarea.setWrapText(true);
@@ -669,12 +709,35 @@ public class Stage {
         Text f3 = new Text("  发送语音  ");
         Text f4 = new Text("  视频聊天  ");
         f4.addEventHandler(MouseEvent.MOUSE_CLICKED,e->{
+            /**
+             * 这个逻辑是,我要先向对方发送want,对方接收到want后给我返回一个allow,
+             */
             Close=1;
             String[] inf = title.split("//");
-            Thread vchat = new Vchat(inf[0].replace("/",""),Integer.parseInt(inf[1]),Client);
-            vchat.start();
-            Thread showthevideo = new showvideo();
-            showthevideo.start();
+            SocketAddress address = new InetSocketAddress(inf[0].replace("/",""),Integer.parseInt(inf[1]));
+//            System.out.println(address);
+            /**
+             * 我先发送一个want,表示我想与对方进行通话
+             */
+            if(showvideo.equals("allow")) {
+                sendvideo(address, Client, "want", myinf());
+                infarea.appendText("请等待对方发送允许\n");
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+                if (sendvideo.equals("allow")) {
+                    showvideo = "no";
+                    sendvideo="no";
+                    Thread vchat = new Vchat(inf[0].replace("/", ""), Integer.parseInt(inf[1]), Client);
+                    vchat.start();
+                    Thread showthevideo = new showvideo();
+                    showthevideo.start();
+                }
+            }else {
+                infarea.appendText("已经打开视频聊天,请关闭当前视频聊天后再开启新的\n");
+            }
         });
         functiondes.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             FileChooser fileChooser = new FileChooser();
@@ -750,15 +813,12 @@ public class Stage {
         Interface(Hmessage, top, textk, Hgetinput, scene, getlist);
         GridPane bt = new GridPane();
         bt.add(Hgetinput, 0, 0, 1, 1);
-        /*
-          这里是最右边的文本框,打印后台输出消息
-         */
         borderPane.setLeft(Hmessage);
         borderPane.setBottom(bt);
         onepeople.setScene(scene);
-        Thread receive = new receiveone(Client, title,getdata,getlist,mess);//title就是用户信息了
-        receive.start();
-        pollone pollone = new pollone(getdata,getlist,title);
+//        Thread receive = new receiveone(Client, title,getdata,getlist,mess);//title就是用户信息了
+//        receive.start();
+        pollone pollone = new pollone(getdata,getlist,title,mess,Client);
         pollone.poll();
         getlist.getSelectionModel().selectedItemProperty().addListener(
                 (ObservableValue<?> ov, Object old_val,
@@ -767,18 +827,17 @@ public class Stage {
                         if (String.valueOf(new_val).contains("done\\")&&String.valueOf(new_val).contains("fzvoice"))
                         {
                             try {
-                                infarea.appendText("播放录音");
+                                infarea.appendText("播放录音\n");
                                 new Thread(()->play(String.valueOf(new_val))).start();
                             }catch (Exception e)
                             {
-                                infarea.appendText("不是录音,不允许点击");
+                                infarea.appendText("不是录音,不允许点击\n");
                             }
                         }
                     }
                 });
         onepeople.setOnCloseRequest(event -> {
             titlelsit.remove(title);
-            receive.stop();
         });
         scene.widthProperty().addListener((observable, oldValue, newValue) -> {
             getlist.setMinWidth((double)newValue);

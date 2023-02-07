@@ -10,9 +10,7 @@ import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 import static GUI.Stage.*;
 import static fileoperate.showfile.delecttemp;
@@ -53,6 +51,12 @@ public class showvideo extends Thread{
                 }
             });
             getimage.start();
+            File ico = new File("ico\\video.png");
+        try {
+            stage.getIcons().add(new Image(new FileInputStream(ico)));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
             stage.show();
             stage.setX(100);
             stage.setY(100);
@@ -60,6 +64,7 @@ public class showvideo extends Thread{
             Thread showvc = new showvc();
             showvc.start();
             stage.setOnCloseRequest(event -> {
+                sendvideo="allow";
                 videostrem.clear();
                 showedtime.clear();
                 showvc.stop();

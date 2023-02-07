@@ -18,16 +18,14 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.charset.StandardCharsets;
 
-import static GUI.Stage.Close;
-import static GUI.Stage.KEY;
+import static GUI.Stage.*;
 
 public class Vchat extends Thread{
     String ip;
@@ -86,11 +84,17 @@ public class Vchat extends Thread{
             stage.setX(100);
             stage.setY(500);
             stage.show();
+            File ico = new File("ico\\video.png");
+        try {
+            stage.getIcons().add(new Image(new FileInputStream(ico)));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
             stage.setResizable(false);
             Thread rchat = new Rchat(ip,port,Client);
             rchat.start();
             stage.setOnCloseRequest(event -> {
-//                System.out.println("Close==0");
+                showvideo="allow";
                 Close=0;
                 getimage.stop();
                 try {

@@ -1,5 +1,6 @@
 package Client;
 
+import GUI.Main;
 import GUI.Stage;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -75,9 +76,6 @@ public class Chat {
                     Stage.data.addAll(userlist);
                     Stage.listView.setItems(Stage.data);
                 });
-                /*
-                 这里默认所有用户已经下线
-                 */
                 break;
             case "errr":
                 Platform.runLater(() -> {
@@ -107,9 +105,6 @@ public class Chat {
                 });
                 break;
             case "meso"://单人消息
-                /*
-                  先判断是否有窗口,
-                 */
                 if(areashow.size()==0)//没有窗口,一定要新建
                 {
                     doarea(result, Client);
@@ -174,13 +169,13 @@ public class Chat {
                 getlist.setItems(getdata);
                 String inf = new String(result, 0, 256);
                 SocketAddress address = new InetSocketAddress(inf.split("//")[1], Integer.parseInt(inf.split("//")[2]));
-                sendmget(address, Client, new String(result, 256, result.length - 256).hashCode(), myinf());
+                sendmget(address, Client, getResult(new String(result, 256, result.length - 256)), myinf());
                 method3("message\\" + name[2] + "\\" + "allmessage.txt", Stage.ID + ":" + format + "\n" + new String(result, 256, result.length - 256));
             });
         }
         if(type.equals("megt")){
-            String SHA = getResult(new String(result,256,result.length-256));
-            mess.removeIf(s -> Objects.equals(getResult(s), SHA));
+            String SHA = new String(result,256,result.length-256);
+            mess.removeIf(s -> getResult(s).equals(SHA));
         }
     }
 

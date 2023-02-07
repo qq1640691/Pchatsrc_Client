@@ -45,17 +45,17 @@ public class sendfile extends Thread {
                 Thread.sleep(10);
                 sendstrone(address, Client, "正在向您发送图片:", myinf());
             }
+            if(!flag.contains("fzimage")&&!flag.contains("fzvoice"))
+            {
+                Thread.sleep(10);
+                sendstrone(address, Client, "正在向您发送文件"+file.getName(), myinf());
+                infarea.appendText("正在发送文件"+file.getName()+"预计时间"+(double)file.length()/1000/1000*20+"\n");
+            }
             int delay;
             try {
                 delay = Integer.parseInt(sendthedelay(infs[0].replace("/","")));
             } catch (Exception e) {
                 delay=15;
-            }
-            if(!flag.contains("fzimage")&&!flag.contains("fzvoice"))
-            {
-                Thread.sleep(10);
-                sendstrone(address, Client, "正在向您发送文件"+file.getName(), myinf());
-                infarea.appendText("正在发送文件"+file.getName()+"预计时间"+(double)file.length()/1000/1000*delay+"\n"+"请等待此文件发送完成再发送下一个文件\n");
             }
             sendbigfiles(address, Client, file, myinf(), thefilepath,delay,flag);
             Thread.sleep(delay);

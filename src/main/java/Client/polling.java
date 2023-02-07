@@ -3,6 +3,7 @@ package Client;
 import Code.AES;
 import GUI.Stage;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TextArea;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -33,18 +35,54 @@ public class polling {
     String ip;
     int port;
     String id;
+    ConcurrentHashMap<String, String> thefilepath;
+    ObservableList<Object> infdata;
 
-    public polling(DatagramSocket client, TextArea area, String ip, int port, String id) {
+
+    public polling(DatagramSocket client, TextArea area, String ip, int port, String id, ConcurrentHashMap<String, String> thefilepath, ObservableList<Object> infdata) {
         Client = client;
         this.area = area;
         this.ip = ip;
         this.port = port;
         this.id = id;
+        this.thefilepath = thefilepath;
+        this.infdata = infdata;
     }
 
     public void poll() {
-        ScheduledExecutorService service = Executors.newScheduledThreadPool(7);
-        service.scheduleAtFixedRate(() -> {
+        ScheduledExecutorService service = Executors.newScheduledThreadPool(9);
+
+        service.scheduleWithFixedDelay(()->{
+            for (byte[] result : allbyte) {
+                String object;
+                if (result.length >= 256) {
+                    object = new String(result, 0, 256);
+                } else {
+                    object = new String(result, 0, result.length);
+                }
+                if (object.contains("meso") || object.contains("list") || object.contains("mesl") || object.contains("errr")) {
+                    try {
+                        dealpacketall(result, userlist, Client, infdata);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    allbyte.remove(result);
+                }
+            }
+        },0,100, TimeUnit.MILLISECONDS);
+
+        service.scheduleWithFixedDelay(() -> {
+            for (byte[] result : filebyte) {
+                try {
+                    dealpacketfile(result, Client, area,thefilepath);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                filebyte.remove(result);
+            }
+        }, 10000, 5, TimeUnit.MILLISECONDS);
+
+        service.scheduleWithFixedDelay(() -> {
             for (byte[] result : delaybyte) {
                 assert result != null;
                 try {
@@ -57,7 +95,7 @@ public class polling {
 //             sleep(10);
         }, 10, 20, TimeUnit.SECONDS);
 
-        service.scheduleAtFixedRate(() ->
+        service.scheduleWithFixedDelay(() ->
         {
             if (fileinf.size() > 0) {
                 Set<String> keyset = fileinf.keySet();
@@ -91,7 +129,7 @@ public class polling {
 //            sleep(20);
         }, 10, 30, TimeUnit.SECONDS);
 
-        service.scheduleAtFixedRate(() ->
+        service.scheduleWithFixedDelay(() ->
         {
             if (userdelay.size() == 0) {
                 area.appendText("正在与其他用户连接中,请耐心等待\n");
@@ -100,11 +138,9 @@ public class polling {
                 area.appendText("已链接用户:\n");
                 area.appendText(userdelay + "\n");
             }
-//            System.out.println("linkuser");
-//            sleep(1);
         }, 60, 30, TimeUnit.SECONDS);
 
-        service.scheduleAtFixedRate(() ->
+        service.scheduleWithFixedDelay(() ->
         {
             DecimalFormat df = new DecimalFormat("0.00");
             if (filetopart.size() > 0) {
@@ -122,7 +158,7 @@ public class polling {
 //            sleep(15);
         }, 0, 20, TimeUnit.SECONDS);
 
-        service.scheduleAtFixedRate(() ->
+        service.scheduleWithFixedDelay(() ->
         {
             if (userlist.size() > 1) {
                 for (String str : userlist) {
@@ -149,7 +185,7 @@ public class polling {
 //            sleep(30);
         }, 10, 30, TimeUnit.SECONDS);
 
-        service.scheduleAtFixedRate(() ->
+        service.scheduleWithFixedDelay(() ->
         {
             for (String s : userlist) {
                 long now = System.currentTimeMillis();
@@ -168,7 +204,7 @@ public class polling {
 //            sleep(50);
         }, 10, 60, TimeUnit.SECONDS);
 
-        service.scheduleAtFixedRate(()->{
+        service.scheduleWithFixedDelay(()->{
             try {
                 serverinf(Client, ip, port, id);
             } catch (IOException e) {

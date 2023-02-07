@@ -4,9 +4,7 @@ import Code.AES;
 import thesendinf.sendinf;
 
 import javax.sound.sampled.*;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -82,8 +80,6 @@ public class Rchat extends Thread{
 
         /**
      * 把一个文件转化为byte字节数组。
-     *
-     * @return
      */
     private static  byte[] fileConvertToByteArray(File file) {
         if(file.length()>0) {
